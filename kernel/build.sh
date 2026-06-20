@@ -20,7 +20,8 @@ cd linux-$KERNEL_VER
 # patch -p1 < ../../kernel/patches/preempt-rt.patch
 
 # Copy our custom config
-cp ../../kernel/config/${ARCH}.config .config
+REPO_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+cp "$REPO_ROOT/kernel/config/${ARCH}.config" .config
 
 # Prepare and build
 make ARCH=$ARCH olddefconfig
@@ -45,9 +46,10 @@ if [ "$ARCH" == "x86_64" ]; then
     # Assuming systemd-stub is available at /usr/lib/systemd/boot/efi/linuxx64.efi.stub
     # on the host or cross-compiled sysroot
     # Note: Ensure objcopy is using the cross-toolchain in actual build
+    mkdir -pv $LYCHEEOS/boot
     objcopy \
       --add-section .osrel="/etc/os-release" --change-section-vma .osrel=0x20000 \
-      --add-section .cmdline="../../kernel/config/kernel.cmdline" --change-section-vma .cmdline=0x30000 \
+      --add-section .cmdline="$REPO_ROOT/kernel/config/kernel.cmdline" --change-section-vma .cmdline=0x30000 \
       --add-section .linux="arch/x86/boot/bzImage" --change-section-vma .linux=0x2000000 \
       --add-section .initrd="$SOURCES/linux-build-$ARCH/initramfs-$KERNEL_VER.img" --change-section-vma .initrd=0x3000000 \
       /usr/lib/systemd/boot/efi/linuxx64.efi.stub \
