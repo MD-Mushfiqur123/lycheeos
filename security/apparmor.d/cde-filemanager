@@ -1,0 +1,15 @@
+# /etc/apparmor.d/cde-filemanager
+profile cde-filemanager /usr/bin/cde-filemanager {
+  #include <abstractions/base>
+  #include <abstractions/gtk>
+  #include <abstractions/fonts>
+  
+  /home/*/ r,
+  /home/**  rw,
+  /media/** rw,
+  /run/user/*/gvfs/ r,
+  
+  deny /etc/passwd r,
+  deny /etc/shadow r,
+  deny network,
+}

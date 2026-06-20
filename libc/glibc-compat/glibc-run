@@ -1,0 +1,18 @@
+#!/bin/sh
+# /usr/bin/glibc-run
+# Bubblewrap shim to run glibc apps transparently on a musl-based system.
+# The glibc dependencies should be installed in /lib/glibc-compat.
+
+if ! command -v bwrap >/dev/null 2>&1; then
+    echo "Error: bubblewrap (bwrap) is not installed."
+    exit 1
+fi
+
+exec bwrap \
+  --ro-bind /lib/glibc-compat /lib \
+  --ro-bind /usr/lib/glibc-compat /usr/lib \
+  --bind / / \
+  --dev /dev \
+  --proc /proc \
+  --tmpfs /tmp \
+  -- "$@"
