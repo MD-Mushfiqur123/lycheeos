@@ -1,6 +1,6 @@
 #!/bin/bash
 set -e
-source ../.env
+source "$(dirname "$0")/../.env"
 
 echo "Building musl libc for all targets..."
 

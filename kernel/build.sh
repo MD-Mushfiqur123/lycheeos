@@ -1,7 +1,7 @@
 #!/bin/bash
 # Lychee OS Kernel Build Script (Phase 2)
 set -e
-source ../.env
+source "$(dirname "$0")/../.env"
 
 ARCH=${1:-x86_64}
 echo "Building Linux kernel $KERNEL_VER for $ARCH..."
